@@ -62,28 +62,33 @@
      NAV
   ══════════════════════════════ */
   nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    z-index: 100; width: calc(100% - 48px); max-width: 1200px;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 60px;
-    background: rgba(6,13,31,0.92);
+    padding: 10px 20px;
+    background: #0b1628;
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
+    border: 1px solid rgba(96,165,250,0.12);
+    border-radius: 14px;
     animation: navSlide 0.5s ease both;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
   }
   @keyframes navSlide {
-    from { opacity: 0; transform: translateY(-100%); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
   }
 
   .logo {
     display: flex; align-items: center; gap: 10px;
-    font-size: 1.2rem; font-weight: 700; text-decoration: none; color: var(--white);
+    font-size: 1rem; font-weight: 800; text-decoration: none; color: var(--white);
+    letter-spacing: 0.06em; text-transform: uppercase;
   }
   .logo-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: linear-gradient(135deg, #1d6fff, #60a5fa);
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #1a3a8f, #2d5fc4);
     display: flex; align-items: center; justify-content: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(96,165,250,0.2);
   }
   .logo:hover .logo-icon {
     transform: rotate(-8deg) scale(1.1);
@@ -91,34 +96,52 @@
   }
   .logo-icon svg { width: 18px; height: 18px; stroke: #fff; }
 
-  .nav-links { display: flex; align-items: center; gap: 32px; }
-  .nav-links a {
-    color: var(--muted); text-decoration: none;
-    font-size: 0.875rem; font-weight: 500;
-    display: flex; align-items: center; gap: 7px;
-    transition: color 0.2s;
-    position: relative;
+  .logo-info { display: flex; flex-direction: column; gap: 1px; }
+  .logo-name { font-size: 0.95rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
+  .logo-status {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    color: #4ade80; text-transform: uppercase;
   }
-  .nav-links a::after {
-    content: '';
-    position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
-    background: var(--purple-light);
-    transform: scaleX(0);
-    transition: transform 0.25s ease;
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #4ade80; box-shadow: 0 0 6px #4ade80;
+    animation: blink 2s infinite;
   }
-  .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
-  .nav-links a svg { width: 15px; height: 15px; stroke: currentColor; }
-  .nav-links a:hover, .nav-links a.active { color: var(--white); }
 
-  .btn-discord {
-    background: var(--white); color: #0a0a0f;
-    border: none; border-radius: 8px; padding: 9px 18px;
-    font-family: 'Outfit', sans-serif; font-size: 0.875rem; font-weight: 700;
-    cursor: pointer; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-    display: flex; align-items: center; gap: 7px; text-decoration: none;
+  .nav-links { display: flex; align-items: center; gap: 10px; }
+
+  .nav-btn {
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 18px; border-radius: 9px;
+    font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; text-decoration: none; border: none;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
   }
-  .btn-discord svg { width: 16px; height: 16px; fill: #0a0a0f; }
-  .btn-discord:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,255,255,0.15); }
+  .nav-btn svg { width: 15px; height: 15px; }
+
+  .nav-btn-ghost {
+    background: rgba(255,255,255,0.06);
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .nav-btn-ghost svg { stroke: var(--white); }
+  .nav-btn-ghost:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+  .nav-btn-primary {
+    background: #2563eb; color: #fff;
+    box-shadow: 0 0 20px rgba(37,99,235,0.35);
+  }
+  .nav-btn-primary svg { stroke: #fff; }
+  .nav-btn-primary:hover { background: #3b82f6; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(37,99,235,0.5); }
+
+  .nav-btn-discord {
+    background: #5865f2; color: #fff;
+    box-shadow: 0 0 20px rgba(88,101,242,0.3);
+  }
+  .nav-btn-discord svg { fill: #fff; width: 16px; height: 16px; }
+  .nav-btn-discord:hover { background: #6d79f5; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(88,101,242,0.5); }
+
 
   /* ══════════════════════════════
      HERO
@@ -592,21 +615,24 @@
     <div class="logo-icon">
       <svg viewBox="0 0 24 24"><use href="#i-feather"/></svg>
     </div>
-    Feather
+    <div class="logo-info">
+      <span class="logo-name">Feather</span>
+      <span class="logo-status"><span class="status-dot"></span> Operational</span>
+    </div>
   </a>
+
   <div class="nav-links">
-    <a href="#" id="nav-home" class="active" onclick="showPage('home');return false;">
+    <a href="#" id="nav-home" onclick="showPage('home');return false;" class="nav-btn nav-btn-ghost">
       <svg viewBox="0 0 24 24"><use href="#i-home"/></svg> Home
     </a>
-    <a href="#" id="nav-scripts" onclick="showPage('scripts');return false;">
+    <a href="#" id="nav-scripts" onclick="showPage('scripts');return false;" class="nav-btn nav-btn-ghost">
       <svg viewBox="0 0 24 24"><use href="#i-code2"/></svg> Script Hub
     </a>
-    <a href="#" id="nav-download" onclick="showPage('download');return false;">
+    <a href="#" id="nav-download" onclick="showPage('download');return false;" class="nav-btn nav-btn-primary">
       <svg viewBox="0 0 24 24"><use href="#i-dl"/></svg> Download
     </a>
-    <a href="https://discord.gg/SQwCbSHPX6" target="_blank" class="btn-discord">
-      <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:#0a0a0f;stroke:none"><use href="#i-discord"/></svg>
-      Join Discord
+    <a href="https://discord.gg/SQwCbSHPX6" target="_blank" class="nav-btn nav-btn-discord">
+      <svg viewBox="0 0 24 24" style="stroke:none"><use href="#i-discord"/></svg> Discord
     </a>
   </div>
 </nav>
@@ -846,12 +872,12 @@
 
   function showPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.nav-btn-ghost').forEach(a => a.style.background = '');
     document.getElementById('page-' + page).classList.add('active');
-    document.getElementById('nav-' + page).classList.add('active');
+    const activeBtn = document.getElementById('nav-' + page);
+    if (activeBtn) activeBtn.style.background = 'rgba(37,99,235,0.2)';
     window.scrollTo(0, 0);
     if (page === 'scripts') renderScripts(scripts);
-    // re-run reveal for new page elements
     setTimeout(initReveal, 50);
   }
 
