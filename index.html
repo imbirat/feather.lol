@@ -565,6 +565,51 @@
   .dl-badge.warning svg { stroke: #f59e0b; }
 
   /* ══════════════════════════════
+     CTA SECTION
+  ══════════════════════════════ */
+  .cta-section {
+    text-align: center;
+    padding: 100px 20px 120px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(37,99,235,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-badge {
+    display: inline-flex; align-items: center;
+    border: 1px solid rgba(96,165,250,0.3);
+    border-radius: 100px; padding: 8px 22px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    color: #60a5fa; margin-bottom: 28px;
+    text-transform: uppercase;
+    background: rgba(6,13,31,0.5);
+    box-shadow: 0 0 18px rgba(96,165,250,0.1);
+    position: relative; z-index: 1;
+  }
+
+  .cta-title {
+    font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 900;
+    margin-bottom: 16px; line-height: 1.1;
+    position: relative; z-index: 1;
+  }
+
+  .cta-sub {
+    color: var(--muted); font-size: 1rem;
+    margin-bottom: 40px; position: relative; z-index: 1;
+  }
+
+  .cta-btns {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+
+  /* ══════════════════════════════
      FOOTER
   ══════════════════════════════ */
   footer {
@@ -661,31 +706,6 @@
     </div>
   </section>
 
-  <!-- Code Preview -->
-  <section class="code-preview">
-    <div class="code-window reveal scale-in">
-      <div class="window-bar">
-        <span class="dot red"></span>
-        <span class="dot yellow"></span>
-        <span class="dot green"></span>
-      </div>
-      <div class="code-body">
-        <div class="code-line"><span class="c-muted">-- Feather Executor v1.0.4</span></div>
-        <div class="code-line"></div>
-        <div class="code-line"><span class="c-purple">local</span></div>
-        <div class="code-line"><span class="c-white">Player = </span><span class="c-green">game</span><span class="c-white">:</span><span class="c-blue">GetService</span><span class="c-white">(</span><span class="c-yellow">"Players"</span><span class="c-white">).LocalPlayer</span></div>
-        <div class="code-line"></div>
-        <div class="code-line"><span class="c-purple">function</span></div>
-        <div class="code-line"><span class="c-yellow">Inject</span><span class="c-white">()</span></div>
-        <div class="code-line">&nbsp;&nbsp;<span class="c-green">print</span><span class="c-white">(</span><span class="c-yellow">"Feather Loaded Successfully!"</span><span class="c-white">)</span><span class="code-cursor"></span></div>
-        <div class="code-line"><span class="c-purple">end</span></div>
-        <div class="code-line"></div>
-        <div class="code-line"><span class="code-bar" style="width:55%"></span></div>
-        <div class="code-line"><span class="code-bar" style="width:38%"></span></div>
-      </div>
-    </div>
-  </section>
-
   <!-- Features -->
   <section class="features">
     <div class="features-grid stagger-parent">
@@ -722,9 +742,24 @@
     </div>
   </section>
 
-</div>
+  <!-- CTA Section -->
+  <section class="cta-section reveal">
+    <div class="cta-badge">WHAT ARE YOU WAITING FOR?</div>
+    <h2 class="cta-title">Start Using Feather</h2>
+    <p class="cta-sub">Unlock the power of Feather now, completely free.</p>
+    <div class="cta-btns">
+      <a href="#" class="btn-primary" onclick="showPage('download');return false;">
+        <svg viewBox="0 0 24 24"><use href="#i-dl"/></svg>
+        Download Feather
+      </a>
+      <a href="https://discord.gg/SQwCbSHPX6" target="_blank" class="btn-outline">
+        <svg viewBox="0 0 24 24" style="fill:var(--white);stroke:none;width:16px;height:16px"><use href="#i-discord"/></svg>
+        Discord
+      </a>
+    </div>
+  </section>
 
-<!-- ══ SCRIPTS ══ -->
+</div>
 <div class="page" id="page-scripts">
   <div class="scripthub" style="padding-top:120px;">
     <h2 class="section-title reveal">Script Hub</h2>
