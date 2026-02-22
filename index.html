@@ -25,42 +25,7 @@
     color: var(--white);
     font-family: 'Outfit', sans-serif;
     overflow-x: hidden;
-    cursor: none;
-  }
 
-  /* ── CUSTOM CURSOR ── */
-  #cursor-ring {
-    position: fixed; top: 0; left: 0; z-index: 9999;
-    width: 32px; height: 32px;
-    border: 2px solid rgba(168,85,247,0.8);
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s, background 0.18s;
-    mix-blend-mode: screen;
-  }
-  #cursor-dot {
-    position: fixed; top: 0; left: 0; z-index: 10000;
-    width: 6px; height: 6px;
-    background: var(--cyan);
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 8px var(--cyan), 0 0 20px rgba(34,211,238,0.4);
-  }
-  body.cursor-hover #cursor-ring {
-    width: 50px; height: 50px;
-    background: rgba(124,58,237,0.1);
-    border-color: var(--purple-light);
-  }
-  body.cursor-hover #cursor-dot {
-    background: var(--purple-light);
-    box-shadow: 0 0 10px var(--purple-light), 0 0 24px rgba(168,85,247,0.4);
-  }
-  body.cursor-click #cursor-ring {
-    width: 20px; height: 20px;
-    background: rgba(168,85,247,0.3);
-  }
 
   /* ── NAV ── */
   nav {
@@ -97,7 +62,7 @@
     background: var(--white); color: #0a0a0f;
     border: none; border-radius: 8px; padding: 9px 18px;
     font-family: 'Outfit', sans-serif; font-size: 0.875rem; font-weight: 700;
-    cursor: none; transition: opacity 0.2s, transform 0.15s;
+    cursor: pointer; transition: opacity 0.2s, transform 0.15s;
     display: flex; align-items: center; gap: 7px;
   }
   .btn-discord svg { width: 16px; height: 16px; stroke: #0a0a0f; }
@@ -165,7 +130,7 @@
     background: var(--purple); color: #fff;
     border: none; border-radius: 10px; padding: 13px 26px;
     font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 700;
-    cursor: none; text-decoration: none;
+    cursor: pointer; text-decoration: none;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   }
   .btn-primary svg { width: 17px; height: 17px; stroke: #fff; }
@@ -176,7 +141,7 @@
     background: transparent; color: var(--white);
     border: 1px solid var(--border); border-radius: 10px; padding: 13px 26px;
     font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 600;
-    cursor: none; text-decoration: none;
+    cursor: pointer; text-decoration: none;
     transition: border-color 0.2s, transform 0.15s;
   }
   .btn-outline svg { width: 15px; height: 15px; stroke: var(--white); }
@@ -329,7 +294,7 @@
     background: var(--purple); color: #fff;
     border: none; border-radius: 10px;
     font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 700;
-    cursor: none; display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
     transition: background 0.2s, transform 0.15s;
   }
   .btn-copy svg { width: 15px; height: 15px; stroke: #fff; }
@@ -376,7 +341,7 @@
     background: var(--purple); color: #fff;
     border: none; border-radius: 12px; padding: 15px 44px;
     font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700;
-    cursor: none; text-decoration: none;
+    cursor: pointer; text-decoration: none;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   }
   .btn-download svg { width: 18px; height: 18px; stroke: #fff; }
@@ -409,10 +374,6 @@
 </style>
 </head>
 <body>
-
-<!-- Custom Cursor -->
-<div id="cursor-ring"></div>
-<div id="cursor-dot"></div>
 
 <!-- Inline SVG Symbols -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -594,41 +555,6 @@
 </footer>
 
 <script>
-  /* ── CUSTOM CURSOR ── */
-  const ring = document.getElementById('cursor-ring');
-  const dot  = document.getElementById('cursor-dot');
-  let mx = -200, my = -200, rx = -200, ry = -200;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-  });
-
-  (function animRing() {
-    rx += (mx - rx) * 0.13;
-    ry += (my - ry) * 0.13;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(animRing);
-  })();
-
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest('a,button,input,.feat-card,.script-card,.btn-copy'))
-      document.body.classList.add('cursor-hover');
-  });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest('a,button,input,.feat-card,.script-card,.btn-copy'))
-      document.body.classList.remove('cursor-hover');
-  });
-  document.addEventListener('mousedown', () => {
-    document.body.classList.add('cursor-click');
-    document.body.classList.remove('cursor-hover');
-  });
-  document.addEventListener('mouseup', () => {
-    document.body.classList.remove('cursor-click');
-  });
-
   /* ── SCRIPTS DATA ── */
   const scripts = [
     { name:"Murder Mystery 2 ESP",    game:"Murder Mystery 2", desc:"See murderer and sheriff location at all times.",                 version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/mm2esp"))()' },
