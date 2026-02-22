@@ -396,6 +396,17 @@
   .feat-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
   .feat-card p  { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
 
+  .why-feather {
+    text-align: center; margin-bottom: 48px;
+  }
+  .why-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em;
+    color: #60a5fa; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .why-title {
+    font-size: clamp(2rem, 5vw, 3rem); font-weight: 900;
+  }
+
   /* ══════════════════════════════
      SCRIPT HUB
   ══════════════════════════════ */
@@ -708,6 +719,10 @@
 
   <!-- Features -->
   <section class="features">
+    <div class="why-feather reveal">
+      <p class="why-label">FEATURES</p>
+      <h2 class="why-title">Why Feather?</h2>
+    </div>
     <div class="features-grid stagger-parent">
       <div class="feat-card stagger-child">
         <div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-zap"/></svg></div>
