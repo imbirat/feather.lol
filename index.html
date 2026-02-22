@@ -7,14 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --card: #13131c;
-    --border: rgba(255,255,255,0.07);
-    --purple: #7c3aed;
-    --purple-light: #a855f7;
-    --cyan: #22d3ee;
+    --bg: #060d1f;
+    --card: #0a1530;
+    --border: rgba(99,148,255,0.15);
+    --purple: #2563eb;
+    --purple-light: #60a5fa;
+    --cyan: #93c5fd;
     --white: #f8fafc;
-    --muted: #94a3b8;
+    --muted: #7da8d4;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -65,7 +65,7 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 60px;
-    background: rgba(10,10,15,0.88);
+    background: rgba(6,13,31,0.92);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     animation: navSlide 0.5s ease both;
@@ -81,13 +81,13 @@
   }
   .logo-icon {
     width: 36px; height: 36px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    background: linear-gradient(135deg, #1d6fff, #60a5fa);
     display: flex; align-items: center; justify-content: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   .logo:hover .logo-icon {
     transform: rotate(-8deg) scale(1.1);
-    box-shadow: 0 0 20px rgba(124,58,237,0.5);
+    box-shadow: 0 0 20px rgba(37,99,235,0.5);
   }
   .logo-icon svg { width: 18px; height: 18px; stroke: #fff; }
 
@@ -138,17 +138,17 @@
   .hero-orb-1 {
     width: 600px; height: 600px; top: -150px; left: 50%;
     transform: translateX(-50%);
-    background: rgba(124,58,237,0.18);
+    background: rgba(37,99,235,0.2);
     animation: orbFloat1 8s ease-in-out infinite;
   }
   .hero-orb-2 {
     width: 300px; height: 300px; bottom: 0; right: -50px;
-    background: rgba(34,211,238,0.08);
+    background: rgba(147,197,253,0.08);
     animation: orbFloat2 10s ease-in-out infinite;
   }
   .hero-orb-3 {
     width: 200px; height: 200px; bottom: 100px; left: -50px;
-    background: rgba(168,85,247,0.06);
+    background: rgba(96,165,250,0.06);
     animation: orbFloat2 12s ease-in-out infinite reverse;
   }
   @keyframes orbFloat1 {
@@ -163,7 +163,7 @@
   /* floating particles */
   .particle {
     position: absolute; border-radius: 50%; pointer-events: none;
-    background: rgba(168,85,247,0.5);
+    background: rgba(96,165,250,0.4);
     animation: particleDrift linear infinite;
   }
   @keyframes particleDrift {
@@ -239,7 +239,7 @@
   }
   .btn-primary:hover::after { opacity: 1; }
   .btn-primary svg { width: 17px; height: 17px; stroke: #fff; }
-  .btn-primary:hover { background: var(--purple-light); transform: translateY(-3px); box-shadow: 0 10px 35px rgba(124,58,237,0.45); }
+  .btn-primary:hover { background: var(--purple-light); transform: translateY(-3px); box-shadow: 0 10px 35px rgba(37,99,235,0.45); }
   .btn-primary:active { transform: translateY(-1px); }
 
   .btn-outline {
@@ -263,7 +263,7 @@
   }
   .code-window {
     width: 100%; max-width: 740px;
-    background: #0d0d14;
+    background: #060d1f;
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
@@ -272,7 +272,7 @@
   .window-bar {
     display: flex; align-items: center; gap: 7px;
     padding: 14px 18px;
-    background: #111118;
+    background: #0a1530;
     border-bottom: 1px solid var(--border);
   }
   .dot { width: 12px; height: 12px; border-radius: 50%; }
@@ -323,30 +323,30 @@
   .feat-card::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.7), transparent);
+    background: linear-gradient(90deg, transparent, rgba(37,99,235,0.6), transparent);
     opacity: 0; transition: opacity 0.3s;
   }
   .feat-card::after {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(124,58,237,0.06), transparent 60%);
+    background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(37,99,235,0.08), transparent 60%);
     opacity: 0; transition: opacity 0.3s;
   }
-  .feat-card:hover { border-color: rgba(124,58,237,0.38); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+  .feat-card:hover { border-color: rgba(37,99,235,0.38); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
   .feat-card:hover::before { opacity: 1; }
   .feat-card:hover::after  { opacity: 1; }
 
   .feat-icon {
     width: 50px; height: 50px; border-radius: 14px;
-    background: rgba(124,58,237,0.13);
-    border: 1px solid rgba(124,58,237,0.22);
+    background: rgba(37,99,235,0.13);
+    border: 1px solid rgba(37,99,235,0.22);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 22px;
     transition: transform 0.3s, box-shadow 0.3s;
   }
   .feat-card:hover .feat-icon {
     transform: scale(1.12) rotate(-5deg);
-    box-shadow: 0 0 20px rgba(124,58,237,0.3);
+    box-shadow: 0 0 20px rgba(37,99,235,0.3);
   }
   .feat-icon svg { width: 22px; height: 22px; stroke: var(--purple-light); }
   .feat-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
@@ -366,7 +366,7 @@
     margin-bottom: 36px; max-width: 660px; margin-left: auto; margin-right: auto;
     transition: border-color 0.25s, box-shadow 0.25s;
   }
-  .search-bar:focus-within { border-color: rgba(124,58,237,0.5); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  .search-bar:focus-within { border-color: rgba(37,99,235,0.5); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
   .search-bar svg { width: 17px; height: 17px; stroke: var(--muted); flex-shrink: 0; }
   .search-bar input {
     background: none; border: none; outline: none;
@@ -389,7 +389,7 @@
     from { opacity: 0; transform: translateY(16px) scale(0.97); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .script-card:hover { border-color: rgba(124,58,237,0.38); transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.3); }
+  .script-card:hover { border-color: rgba(37,99,235,0.38); transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.3); }
 
   .script-header {
     display: flex; justify-content: space-between; align-items: flex-start;
@@ -397,7 +397,7 @@
   }
   .script-icon-wrap {
     width: 40px; height: 40px; border-radius: 11px;
-    background: rgba(124,58,237,0.13); border: 1px solid rgba(124,58,237,0.22);
+    background: rgba(37,99,235,0.13); border: 1px solid rgba(37,99,235,0.22);
     display: flex; align-items: center; justify-content: center;
     transition: transform 0.2s;
   }
@@ -434,7 +434,7 @@
   }
   .btn-copy:hover::after { transform: translateX(0); }
   .btn-copy svg { width: 15px; height: 15px; stroke: #fff; }
-  .btn-copy:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.35); }
+  .btn-copy:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.35); }
   .btn-copy.copied { background: #16a34a; }
 
   /* ══════════════════════════════
@@ -455,25 +455,25 @@
     content: '';
     position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
     width: 500px; height: 350px;
-    background: radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 70%);
+    background: radial-gradient(ellipse, rgba(37,99,235,0.12) 0%, transparent 70%);
     pointer-events: none;
   }
   .download-card::after {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent);
+    background: linear-gradient(90deg, transparent, rgba(96,165,250,0.4), transparent);
   }
 
   .dl-icon-wrap {
     width: 72px; height: 72px; border-radius: 20px;
-    background: rgba(124,58,237,0.13); border: 1px solid rgba(124,58,237,0.25);
+    background: rgba(37,99,235,0.13); border: 1px solid rgba(37,99,235,0.25);
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 28px;
     animation: dlIconPulse 3s ease-in-out infinite;
   }
   @keyframes dlIconPulse {
     0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); }
-    50%      { box-shadow: 0 0 0 12px rgba(124,58,237,0.12); }
+    50%      { box-shadow: 0 0 0 12px rgba(37,99,235,0.12); }
   }
   .dl-icon-wrap svg { width: 32px; height: 32px; stroke: var(--purple-light); }
 
@@ -506,7 +506,7 @@
     0%,100% { transform: translateY(0); }
     50%      { transform: translateY(3px); }
   }
-  .btn-download:hover { background: var(--purple-light); transform: translateY(-3px); box-shadow: 0 12px 35px rgba(124,58,237,0.45); }
+  .btn-download:hover { background: var(--purple-light); transform: translateY(-3px); box-shadow: 0 12px 35px rgba(37,99,235,0.45); }
 
   .dl-badges {
     display: flex; align-items: center; justify-content: center; gap: 22px;
@@ -558,7 +558,7 @@
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
-  <symbol id="i-gamepad" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4m-2-2v4"/><circle cx="17" cy="11" r="1" style="fill:#22d3ee;stroke:none"/><circle cx="15" cy="13" r="1" style="fill:#22d3ee;stroke:none"/></symbol>
+  <symbol id="i-gamepad" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4m-2-2v4"/><circle cx="17" cy="11" r="1" style="fill:#60a5fa;stroke:none"/><circle cx="15" cy="13" r="1" style="fill:#60a5fa;stroke:none"/></symbol>
   <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="m10.29 3.86-8.17 14.14a2 2 0 0 0 1.72 3h16.32a2 2 0 0 0 1.72-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="3"/></symbol>
