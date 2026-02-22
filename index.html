@@ -20,50 +20,47 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
-  /* ── CUSTOM CURSOR ── */
-  body { cursor: none; }
-
-  #cursor-ring {
-    position: fixed; top: 0; left: 0; z-index: 9999;
-    width: 32px; height: 32px;
-    border: 2px solid rgba(168,85,247,0.8);
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s, background 0.18s;
-    mix-blend-mode: screen;
-  }
-  #cursor-dot {
-    position: fixed; top: 0; left: 0; z-index: 10000;
-    width: 6px; height: 6px;
-    background: var(--cyan);
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 8px var(--cyan), 0 0 20px rgba(34,211,238,0.4);
-  }
-  body.cursor-hover #cursor-ring {
-    width: 50px; height: 50px;
-    background: rgba(124,58,237,0.1);
-    border-color: var(--purple-light);
-  }
-  body.cursor-hover #cursor-dot {
-    background: var(--purple-light);
-    box-shadow: 0 0 10px var(--purple-light), 0 0 24px rgba(168,85,247,0.4);
-  }
-  body.cursor-click #cursor-ring {
-    width: 20px; height: 20px;
-    background: rgba(168,85,247,0.3);
-  }
-
   body {
     background: var(--bg);
     color: var(--white);
     font-family: 'Outfit', sans-serif;
     overflow-x: hidden;
+  }
 
+  svg { fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ── NAV ── */
+  /* ══════════════════════════════
+     SCROLL ANIMATION SYSTEM
+  ══════════════════════════════ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.from-left  { transform: translateX(-40px); }
+  .reveal.from-right { transform: translateX(40px); }
+  .reveal.scale-in   { transform: scale(0.92); }
+  .reveal.visible {
+    opacity: 1;
+    transform: translate(0) scale(1);
+  }
+  /* staggered children */
+  .stagger-parent .stagger-child {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .stagger-parent.visible .stagger-child:nth-child(1) { transition-delay: 0.05s; }
+  .stagger-parent.visible .stagger-child:nth-child(2) { transition-delay: 0.15s; }
+  .stagger-parent.visible .stagger-child:nth-child(3) { transition-delay: 0.25s; }
+  .stagger-parent.visible .stagger-child:nth-child(4) { transition-delay: 0.35s; }
+  .stagger-parent.visible .stagger-child:nth-child(5) { transition-delay: 0.45s; }
+  .stagger-parent.visible .stagger-child:nth-child(6) { transition-delay: 0.55s; }
+  .stagger-parent.visible .stagger-child { opacity: 1; transform: translateY(0); }
+
+  /* ══════════════════════════════
+     NAV
+  ══════════════════════════════ */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
@@ -71,6 +68,11 @@
     background: rgba(10,10,15,0.88);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
+    animation: navSlide 0.5s ease both;
+  }
+  @keyframes navSlide {
+    from { opacity: 0; transform: translateY(-100%); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   .logo {
@@ -81,6 +83,11 @@
     width: 36px; height: 36px; border-radius: 10px;
     background: linear-gradient(135deg, var(--purple), var(--cyan));
     display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .logo:hover .logo-icon {
+    transform: rotate(-8deg) scale(1.1);
+    box-shadow: 0 0 20px rgba(124,58,237,0.5);
   }
   .logo-icon svg { width: 18px; height: 18px; stroke: #fff; }
 
@@ -90,7 +97,16 @@
     font-size: 0.875rem; font-weight: 500;
     display: flex; align-items: center; gap: 7px;
     transition: color 0.2s;
+    position: relative;
   }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+    background: var(--purple-light);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+  }
+  .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
   .nav-links a svg { width: 15px; height: 15px; stroke: currentColor; }
   .nav-links a:hover, .nav-links a.active { color: var(--white); }
 
@@ -98,33 +114,63 @@
     background: var(--white); color: #0a0a0f;
     border: none; border-radius: 8px; padding: 9px 18px;
     font-family: 'Outfit', sans-serif; font-size: 0.875rem; font-weight: 700;
-    cursor: none; transition: opacity 0.2s, transform 0.15s;
-    display: flex; align-items: center; gap: 7px;
+    cursor: pointer; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; gap: 7px; text-decoration: none;
   }
-  .btn-discord svg { width: 16px; height: 16px; stroke: #0a0a0f; }
-  a.btn-discord { text-decoration: none; }
-  .btn-discord:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-discord svg { width: 16px; height: 16px; fill: #0a0a0f; }
+  .btn-discord:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,255,255,0.15); }
 
-  /* ── HERO ── */
+  /* ══════════════════════════════
+     HERO
+  ══════════════════════════════ */
   .hero {
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; padding: 120px 20px 80px;
     position: relative; overflow: hidden;
   }
-  .hero::before {
-    content: '';
-    position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
-    width: 900px; height: 700px;
-    background: radial-gradient(ellipse, rgba(124,58,237,0.16) 0%, transparent 68%);
-    pointer-events: none;
+
+  /* animated background orbs */
+  .hero-orb {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    filter: blur(80px);
   }
-  .hero::after {
-    content: '';
-    position: absolute; bottom: -80px; right: -80px;
-    width: 400px; height: 400px;
-    background: radial-gradient(ellipse, rgba(34,211,238,0.06) 0%, transparent 70%);
-    pointer-events: none;
+  .hero-orb-1 {
+    width: 600px; height: 600px; top: -150px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(124,58,237,0.18);
+    animation: orbFloat1 8s ease-in-out infinite;
+  }
+  .hero-orb-2 {
+    width: 300px; height: 300px; bottom: 0; right: -50px;
+    background: rgba(34,211,238,0.08);
+    animation: orbFloat2 10s ease-in-out infinite;
+  }
+  .hero-orb-3 {
+    width: 200px; height: 200px; bottom: 100px; left: -50px;
+    background: rgba(168,85,247,0.06);
+    animation: orbFloat2 12s ease-in-out infinite reverse;
+  }
+  @keyframes orbFloat1 {
+    0%,100% { transform: translateX(-50%) translateY(0) scale(1); }
+    50%      { transform: translateX(-50%) translateY(-30px) scale(1.05); }
+  }
+  @keyframes orbFloat2 {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-20px) scale(1.08); }
+  }
+
+  /* floating particles */
+  .particle {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    background: rgba(168,85,247,0.5);
+    animation: particleDrift linear infinite;
+  }
+  @keyframes particleDrift {
+    0%   { transform: translateY(100vh) translateX(0) scale(1); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-100px) translateX(var(--drift)) scale(0.5); opacity: 0; }
   }
 
   .version-badge {
@@ -133,7 +179,11 @@
     border-radius: 100px; padding: 6px 16px;
     font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
     color: var(--muted); margin-bottom: 36px;
-    animation: fadeDown 0.6s ease both;
+    animation: badgePop 0.6s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes badgePop {
+    from { opacity: 0; transform: scale(0.7) translateY(-10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
   }
   .version-dot {
     width: 6px; height: 6px; border-radius: 50%;
@@ -145,20 +195,31 @@
   .hero h1 {
     font-size: clamp(2.8rem, 8vw, 5.8rem); font-weight: 900;
     line-height: 1.06; margin-bottom: 22px;
-    animation: fadeUp 0.7s 0.1s ease both;
+    animation: heroTitle 0.8s 0.35s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  @keyframes heroTitle {
+    from { opacity: 0; transform: translateY(40px) skewY(2deg); }
+    to   { opacity: 1; transform: translateY(0) skewY(0); }
   }
   .hero h1 .gradient {
     background: linear-gradient(90deg, var(--purple-light), var(--cyan));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    background-size: 200%;
+    animation: gradientShift 4s ease infinite;
   }
+  @keyframes gradientShift {
+    0%,100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
   .hero p {
     font-size: 1.05rem; color: var(--muted); max-width: 540px;
     line-height: 1.75; margin-bottom: 48px;
-    animation: fadeUp 0.7s 0.2s ease both;
+    animation: heroTitle 0.8s 0.5s cubic-bezier(0.16,1,0.3,1) both;
   }
   .hero-btns {
     display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
-    animation: fadeUp 0.7s 0.3s ease both;
+    animation: heroTitle 0.8s 0.65s cubic-bezier(0.16,1,0.3,1) both;
   }
 
   .btn-primary {
@@ -166,52 +227,55 @@
     background: var(--purple); color: #fff;
     border: none; border-radius: 10px; padding: 13px 26px;
     font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 700;
-    cursor: none; text-decoration: none;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
   }
+  .btn-primary::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .btn-primary:hover::after { opacity: 1; }
   .btn-primary svg { width: 17px; height: 17px; stroke: #fff; }
-  .btn-primary:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,58,237,0.4); }
+  .btn-primary:hover { background: var(--purple-light); transform: translateY(-3px); box-shadow: 0 10px 35px rgba(124,58,237,0.45); }
+  .btn-primary:active { transform: translateY(-1px); }
 
   .btn-outline {
     display: inline-flex; align-items: center; gap: 8px;
     background: transparent; color: var(--white);
     border: 1px solid var(--border); border-radius: 10px; padding: 13px 26px;
     font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 600;
-    cursor: none; text-decoration: none;
-    transition: border-color 0.2s, transform 0.15s;
+    cursor: pointer; text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
   }
-  .btn-outline svg { width: 15px; height: 15px; stroke: var(--white); }
-  .btn-outline:hover { border-color: rgba(255,255,255,0.28); transform: translateY(-2px); }
+  .btn-outline svg { width: 15px; height: 15px; stroke: var(--white); transition: transform 0.2s; }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-3px); background: rgba(255,255,255,0.04); }
+  .btn-outline:hover svg { transform: translateX(4px); }
 
-  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
-
-  /* ── CODE PREVIEW ── */
+  /* ══════════════════════════════
+     CODE PREVIEW
+  ══════════════════════════════ */
   .code-preview {
     display: flex; justify-content: center;
-    padding: 0 20px 80px;
+    padding: 0 20px 90px;
   }
-
   .code-window {
     width: 100%; max-width: 740px;
     background: #0d0d14;
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
-    animation: fadeUp 0.8s 0.4s ease both;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
   }
-
   .window-bar {
     display: flex; align-items: center; gap: 7px;
     padding: 14px 18px;
     background: #111118;
     border-bottom: 1px solid var(--border);
   }
-
-  .dot {
-    width: 12px; height: 12px; border-radius: 50%;
-  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
   .dot.red    { background: #ff5f57; }
   .dot.yellow { background: #ffbd2e; }
   .dot.green  { background: #28ca40; }
@@ -221,24 +285,29 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.88rem; line-height: 2;
   }
-
   .code-line { min-height: 1.6em; }
-
   .c-muted  { color: #4b5563; }
   .c-purple { color: #a855f7; }
   .c-white  { color: #e2e8f0; }
   .c-green  { color: #34d399; }
   .c-blue   { color: #60a5fa; }
   .c-yellow { color: #fbbf24; }
-
   .code-bar {
     display: inline-block; height: 8px; border-radius: 4px;
-    background: rgba(255,255,255,0.07);
-    vertical-align: middle;
+    background: rgba(255,255,255,0.07); vertical-align: middle;
   }
 
-  /* ── FEATURES ── */
-  .features { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+  /* typing cursor blink in code window */
+  .code-cursor {
+    display: inline-block; width: 2px; height: 1em;
+    background: var(--purple-light); vertical-align: middle; margin-left: 2px;
+    animation: blink 1s infinite;
+  }
+
+  /* ══════════════════════════════
+     FEATURES
+  ══════════════════════════════ */
+  .features { padding: 20px 60px 100px; max-width: 1200px; margin: 0 auto; }
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -247,17 +316,25 @@
   .feat-card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 18px; padding: 32px;
-    transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
     position: relative; overflow: hidden;
+    cursor: default;
   }
   .feat-card::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.6), transparent);
+    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.7), transparent);
     opacity: 0; transition: opacity 0.3s;
   }
-  .feat-card:hover { border-color: rgba(124,58,237,0.38); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.35); }
+  .feat-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(124,58,237,0.06), transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .feat-card:hover { border-color: rgba(124,58,237,0.38); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
   .feat-card:hover::before { opacity: 1; }
+  .feat-card:hover::after  { opacity: 1; }
 
   .feat-icon {
     width: 50px; height: 50px; border-radius: 14px;
@@ -265,12 +342,19 @@
     border: 1px solid rgba(124,58,237,0.22);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 22px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .feat-card:hover .feat-icon {
+    transform: scale(1.12) rotate(-5deg);
+    box-shadow: 0 0 20px rgba(124,58,237,0.3);
   }
   .feat-icon svg { width: 22px; height: 22px; stroke: var(--purple-light); }
   .feat-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
-  .feat-card p { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
+  .feat-card p  { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
 
-  /* ── SCRIPT HUB ── */
+  /* ══════════════════════════════
+     SCRIPT HUB
+  ══════════════════════════════ */
   .scripthub { padding: 80px 60px; max-width: 1200px; margin: 0 auto; }
   .section-title {
     text-align: center; font-size: 2.4rem; font-weight: 800; margin-bottom: 48px;
@@ -280,9 +364,9 @@
     background: var(--card); border: 1px solid var(--border);
     border-radius: 12px; padding: 13px 20px;
     margin-bottom: 36px; max-width: 660px; margin-left: auto; margin-right: auto;
-    transition: border-color 0.2s;
+    transition: border-color 0.25s, box-shadow 0.25s;
   }
-  .search-bar:focus-within { border-color: rgba(124,58,237,0.4); }
+  .search-bar:focus-within { border-color: rgba(124,58,237,0.5); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
   .search-bar svg { width: 17px; height: 17px; stroke: var(--muted); flex-shrink: 0; }
   .search-bar input {
     background: none; border: none; outline: none;
@@ -298,9 +382,14 @@
   .script-card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; padding: 24px;
-    transition: border-color 0.2s, transform 0.2s;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    animation: cardIn 0.4s ease both;
   }
-  .script-card:hover { border-color: rgba(124,58,237,0.35); transform: translateY(-3px); }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .script-card:hover { border-color: rgba(124,58,237,0.38); transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.3); }
 
   .script-header {
     display: flex; justify-content: space-between; align-items: flex-start;
@@ -310,7 +399,9 @@
     width: 40px; height: 40px; border-radius: 11px;
     background: rgba(124,58,237,0.13); border: 1px solid rgba(124,58,237,0.22);
     display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
   }
+  .script-card:hover .script-icon-wrap { transform: rotate(-8deg) scale(1.1); }
   .script-icon-wrap svg { width: 18px; height: 18px; stroke: var(--purple-light); }
   .script-version {
     font-size: 0.68rem; color: var(--muted);
@@ -330,14 +421,25 @@
     background: var(--purple); color: #fff;
     border: none; border-radius: 10px;
     font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 700;
-    cursor: none; display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: background 0.2s, transform 0.15s;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
   }
+  .btn-copy::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .btn-copy:hover::after { transform: translateX(0); }
   .btn-copy svg { width: 15px; height: 15px; stroke: #fff; }
-  .btn-copy:hover { background: var(--purple-light); transform: translateY(-1px); }
+  .btn-copy:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.35); }
   .btn-copy.copied { background: #16a34a; }
 
-  /* ── DOWNLOAD ── */
+  /* ══════════════════════════════
+     DOWNLOAD
+  ══════════════════════════════ */
   .download-section {
     padding: 120px 20px;
     display: flex; flex-direction: column; align-items: center;
@@ -356,11 +458,22 @@
     background: radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 70%);
     pointer-events: none;
   }
+  .download-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent);
+  }
+
   .dl-icon-wrap {
     width: 72px; height: 72px; border-radius: 20px;
     background: rgba(124,58,237,0.13); border: 1px solid rgba(124,58,237,0.25);
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 28px;
+    animation: dlIconPulse 3s ease-in-out infinite;
+  }
+  @keyframes dlIconPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); }
+    50%      { box-shadow: 0 0 0 12px rgba(124,58,237,0.12); }
   }
   .dl-icon-wrap svg { width: 32px; height: 32px; stroke: var(--purple-light); }
 
@@ -377,11 +490,23 @@
     background: var(--purple); color: #fff;
     border: none; border-radius: 12px; padding: 15px 44px;
     font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700;
-    cursor: none; text-decoration: none;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
   }
-  .btn-download svg { width: 18px; height: 18px; stroke: #fff; }
-  .btn-download:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(124,58,237,0.4); }
+  .btn-download::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .btn-download:hover::after { opacity: 1; }
+  .btn-download svg { width: 18px; height: 18px; stroke: #fff; animation: dlBounce 1.5s ease-in-out infinite; }
+  @keyframes dlBounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(3px); }
+  }
+  .btn-download:hover { background: var(--purple-light); transform: translateY(-3px); box-shadow: 0 12px 35px rgba(124,58,237,0.45); }
 
   .dl-badges {
     display: flex; align-items: center; justify-content: center; gap: 22px;
@@ -395,34 +520,36 @@
   .dl-badge.warning { color: #f59e0b; }
   .dl-badge.warning svg { stroke: #f59e0b; }
 
-  /* ── FOOTER ── */
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
   footer {
     border-top: 1px solid var(--border);
     padding: 28px 60px;
     text-align: center; color: var(--muted); font-size: 0.82rem;
   }
 
-  /* ── PAGE SWITCHING ── */
+  /* ══════════════════════════════
+     PAGE SWITCHING
+  ══════════════════════════════ */
   .page { display: none; }
-  .page.active { display: block; }
-
-  svg { fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .page.active { display: block; animation: pageIn 0.4s ease both; }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
 
-<!-- Custom Cursor -->
-<div id="cursor-ring"></div>
-<div id="cursor-dot"></div>
-
-<!-- Inline SVG Symbols -->
+<!-- SVG Symbols -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
   <symbol id="i-code2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
   <symbol id="i-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
   <symbol id="i-discord" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" style="stroke:none;fill:currentColor"/></symbol>
   <symbol id="i-feather" viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></symbol>
-  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" style="stroke:inherit;fill:none"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol>
   <symbol id="i-terminal" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></symbol>
@@ -431,7 +558,7 @@
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
-  <symbol id="i-gamepad" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4m-2-2v4"/><circle cx="17" cy="11" r="1" style="fill:var(--cyan);stroke:none"/><circle cx="15" cy="13" r="1" style="fill:var(--cyan);stroke:none"/></symbol>
+  <symbol id="i-gamepad" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4m-2-2v4"/><circle cx="17" cy="11" r="1" style="fill:#22d3ee;stroke:none"/><circle cx="15" cy="13" r="1" style="fill:#22d3ee;stroke:none"/></symbol>
   <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="m10.29 3.86-8.17 14.14a2 2 0 0 0 1.72 3h16.32a2 2 0 0 0 1.72-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="3"/></symbol>
@@ -465,7 +592,13 @@
 
 <!-- ══ HOME ══ -->
 <div class="page active" id="page-home">
+
   <section class="hero">
+    <!-- Animated background orbs -->
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+
     <div class="version-badge">
       <span class="version-dot"></span>
       VERSION 1.0.4 LIVE
@@ -484,9 +617,9 @@
     </div>
   </section>
 
-  <!-- CODE PREVIEW -->
+  <!-- Code Preview -->
   <section class="code-preview">
-    <div class="code-window">
+    <div class="code-window reveal scale-in">
       <div class="window-bar">
         <span class="dot red"></span>
         <span class="dot yellow"></span>
@@ -500,7 +633,7 @@
         <div class="code-line"></div>
         <div class="code-line"><span class="c-purple">function</span></div>
         <div class="code-line"><span class="c-yellow">Inject</span><span class="c-white">()</span></div>
-        <div class="code-line">&nbsp;&nbsp;<span class="c-green">print</span><span class="c-white">(</span><span class="c-yellow">"Feather Loaded Successfully!"</span><span class="c-white">)</span></div>
+        <div class="code-line">&nbsp;&nbsp;<span class="c-green">print</span><span class="c-white">(</span><span class="c-yellow">"Feather Loaded Successfully!"</span><span class="c-white">)</span><span class="code-cursor"></span></div>
         <div class="code-line"><span class="c-purple">end</span></div>
         <div class="code-line"></div>
         <div class="code-line"><span class="code-bar" style="width:55%"></span></div>
@@ -509,47 +642,49 @@
     </div>
   </section>
 
+  <!-- Features -->
   <section class="features">
-    <div class="features-grid">
-      <div class="feat-card">
+    <div class="features-grid stagger-parent">
+      <div class="feat-card stagger-child">
         <div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-zap"/></svg></div>
         <h3>Lightning Fast</h3>
         <p>Optimized C++ execution engine ensures your scripts run with zero latency and maximum FPS.</p>
       </div>
-      <div class="feat-card">
+      <div class="feat-card stagger-child">
         <div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg></div>
         <h3>100% Undetectable</h3>
         <p>Advanced anti-tamper protection and unique injection methods keep your account safe from bans.</p>
       </div>
-      <div class="feat-card">
+      <div class="feat-card stagger-child">
         <div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-cloud"/></svg></div>
         <h3>Cloud Script Hub</h3>
         <p>Access thousands of community-verified scripts directly from our built-in cloud library.</p>
       </div>
-      <div class="feat-card">
+      <div class="feat-card stagger-child">
         <div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-terminal"/></svg></div>
         <h3>Level 8 Execution</h3>
         <p>Full support for all major script functions and libraries. Run OwlHub, Infinite Yield, and more.</p>
       </div>
-      <div class="feat-card">
+      <div class="feat-card stagger-child">
         <div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-headphones"/></svg></div>
         <h3>24/7 Support</h3>
         <p>Our dedicated support team is always available on Discord to help you with any issues.</p>
       </div>
-      <div class="feat-card">
+      <div class="feat-card stagger-child">
         <div class="feat-icon"><svg viewBox="0 0 24 24"><use href="#i-refresh"/></svg></div>
         <h3>Auto Updates</h3>
         <p>Never worry about patches. Feather automatically updates when Roblox updates.</p>
       </div>
     </div>
   </section>
+
 </div>
 
 <!-- ══ SCRIPTS ══ -->
 <div class="page" id="page-scripts">
   <div class="scripthub" style="padding-top:120px;">
-    <h2 class="section-title">Script Hub</h2>
-    <div class="search-bar">
+    <h2 class="section-title reveal">Script Hub</h2>
+    <div class="search-bar reveal">
       <svg viewBox="0 0 24 24"><use href="#i-search"/></svg>
       <input type="text" placeholder="Search scripts by game or name..." oninput="filterScripts(this.value)">
     </div>
@@ -560,7 +695,7 @@
 <!-- ══ DOWNLOAD ══ -->
 <div class="page" id="page-download">
   <section class="download-section">
-    <div class="download-card">
+    <div class="download-card reveal scale-in">
       <div class="dl-icon-wrap">
         <svg viewBox="0 0 24 24"><use href="#i-dl"/></svg>
       </div>
@@ -573,76 +708,82 @@
         Download Installer
       </a>
       <div class="dl-badges">
-        <div class="dl-badge">
-          <svg viewBox="0 0 24 24"><use href="#i-monitor"/></svg>
-          Windows Supported
-        </div>
-        <div class="dl-badge">
-          <svg viewBox="0 0 24 24"><use href="#i-phone"/></svg>
-          Mobile Coming Soon
-        </div>
-        <div class="dl-badge warning">
-          <svg viewBox="0 0 24 24"><use href="#i-alert"/></svg>
-          Disable Antivirus
-        </div>
+        <div class="dl-badge"><svg viewBox="0 0 24 24"><use href="#i-monitor"/></svg> Windows Supported</div>
+        <div class="dl-badge"><svg viewBox="0 0 24 24"><use href="#i-phone"/></svg> Mobile Coming Soon</div>
+        <div class="dl-badge warning"><svg viewBox="0 0 24 24"><use href="#i-alert"/></svg> Disable Antivirus</div>
       </div>
     </div>
   </section>
 </div>
 
-<footer>
-  © 2025 Feather Executor. All rights reserved.
-</footer>
+<footer>© 2025 Feather Executor. All rights reserved.</footer>
 
 <script>
-  /* ── CUSTOM CURSOR ── */
-  const ring = document.getElementById('cursor-ring');
-  const dot  = document.getElementById('cursor-dot');
-  let mx = -200, my = -200, rx = -200, ry = -200;
+  /* ── FLOATING PARTICLES ── */
+  function spawnParticles() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    for (let i = 0; i < 12; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 4 + 2;
+      const delay = Math.random() * 8;
+      const duration = Math.random() * 10 + 12;
+      const drift = (Math.random() - 0.5) * 200;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random() * 100}%;
+        bottom: -20px;
+        --drift: ${drift}px;
+        animation-duration: ${duration}s;
+        animation-delay: ${delay}s;
+        opacity: 0;
+      `;
+      hero.appendChild(p);
+    }
+  }
+  spawnParticles();
 
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
+  /* ── FEATURE CARD MOUSE GLOW ── */
+  document.querySelectorAll('.feat-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%';
+      const y = ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%';
+      card.style.setProperty('--mx', x);
+      card.style.setProperty('--my', y);
+    });
   });
 
-  (function animRing() {
-    rx += (mx - rx) * 0.13;
-    ry += (my - ry) * 0.13;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(animRing);
-  })();
+  /* ── SCROLL REVEAL ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
 
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest('a,button,input,.feat-card,.script-card,.btn-copy'))
-      document.body.classList.add('cursor-hover');
-  });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest('a,button,input,.feat-card,.script-card,.btn-copy'))
-      document.body.classList.remove('cursor-hover');
-  });
-  document.addEventListener('mousedown', () => {
-    document.body.classList.add('cursor-click');
-    document.body.classList.remove('cursor-hover');
-  });
-  document.addEventListener('mouseup', () => {
-    document.body.classList.remove('cursor-click');
-  });
+  function initReveal() {
+    document.querySelectorAll('.reveal, .stagger-parent').forEach(el => {
+      observer.observe(el);
+    });
+  }
+  initReveal();
 
   /* ── SCRIPTS DATA ── */
   const scripts = [
-    { name:"Murder Mystery 2 ESP",    game:"Murder Mystery 2", desc:"See murderer and sheriff location at all times.",                 version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/mm2esp"))()' },
-    { name:"Da Hood Aimlock",          game:"Da Hood",          desc:"Silent aim, ESP, and fly for Da Hood.",                          version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/dahood"))()' },
-    { name:"Blade Ball Auto Parry",   game:"Blade Ball",       desc:"Never lose in Blade Ball again. Auto parry with 100% accuracy.", version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/bladeball"))()' },
-    { name:"Blox Fruits Auto Farm",   game:"Blox Fruits",      desc:"Automatically farm fruits, level up fast, and get devil fruits.",version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/bloxfruits"))()' },
-    { name:"Arsenal Aimbot",           game:"Arsenal",          desc:"Precision aimbot and ESP for all Arsenal game modes.",           version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/arsenal"))()' },
-    { name:"Pet Simulator X AutoFarm",game:"Pet Simulator X",  desc:"Automatically collect coins and hatch eggs endlessly.",          version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/psx"))()' },
+    { name:"Murder Mystery 2 ESP",     game:"Murder Mystery 2", desc:"See murderer and sheriff location at all times.",                 version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/mm2esp"))()' },
+    { name:"Da Hood Aimlock",           game:"Da Hood",          desc:"Silent aim, ESP, and fly for Da Hood.",                          version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/dahood"))()' },
+    { name:"Blade Ball Auto Parry",    game:"Blade Ball",       desc:"Never lose in Blade Ball again. Auto parry with 100% accuracy.", version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/bladeball"))()' },
+    { name:"Blox Fruits Auto Farm",    game:"Blox Fruits",      desc:"Automatically farm fruits, level up fast, and get devil fruits.",version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/bloxfruits"))()' },
+    { name:"Arsenal Aimbot",            game:"Arsenal",          desc:"Precision aimbot and ESP for all Arsenal game modes.",           version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/arsenal"))()' },
+    { name:"Pet Simulator X AutoFarm", game:"Pet Simulator X",  desc:"Automatically collect coins and hatch eggs endlessly.",          version:"v1.0", code:'loadstring(game:HttpGet("https://example.com/psx"))()' },
   ];
 
   function renderScripts(list) {
     document.getElementById('scripts-grid').innerHTML = list.map((s, i) => `
-      <div class="script-card">
+      <div class="script-card" style="animation-delay:${i * 0.07}s">
         <div class="script-header">
           <div class="script-icon-wrap">
             <svg viewBox="0 0 24 24"><use href="#i-terminal"/></svg>
@@ -689,6 +830,8 @@
     document.getElementById('nav-' + page).classList.add('active');
     window.scrollTo(0, 0);
     if (page === 'scripts') renderScripts(scripts);
+    // re-run reveal for new page elements
+    setTimeout(initReveal, 50);
   }
 
   renderScripts(scripts);
